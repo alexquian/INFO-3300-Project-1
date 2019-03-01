@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"> </script>
+</head>
+
+<body>
+  <script>
+    const visualizeData = async() => {
+
+      // IMPORT GRAD SALARIES DATASET
+      const gradSalaries = await d3.csv("../datasets/grad-salaries-by-region.csv");
+      console.log(gradSalaries);
+
+      // IMPORT STATE INCOMES DATASET
+      const stateIncomes = await d3.csv("../datasets/incomes-by-state.csv");
+      console.log(stateIncomes);
+    }
+
+    visualizeData();
+  </script>
+
+</body>
+
+</html>
