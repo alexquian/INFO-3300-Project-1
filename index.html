@@ -9,15 +9,41 @@
   <script>
     const visualizeData = async() => {
 
+      // ANASTASIA: Create Map here:
+
       // IMPORT GRAD SALARIES DATASET
       const gradSalaries = await d3.csv("../datasets/grad-salaries-by-region.csv");
-      console.log(gradSalaries);
+
+      const southernStartingSalaries = [];
+      const westernStartingSalaries = [];
+      const midwesternStartingSalaries = [];
+      const californiaStartingSalaries = [];
+      const northeasternStartingSalaries = [];
+
+      // Sanitizes starting median salaries for college graduates and splits by region
+      gradSalaries.forEach((d, i) => {
+        d["Starting Median Salary"] = Number(d["Starting Median Salary"].replace(/,/g,"").replace("$",""));
+
+        if (d["Region"] == "Southern") {
+          southernStartingSalaries.push(d["Starting Median Salary"]);
+
+        } else if (d["Region"] == "Western") {
+          westernStartingSalaries.push(d["Starting Median Salary"]);
+
+        } else if (d["Region"] == "Midwestern") {
+          midwesternStartingSalaries.push(d["Starting Median Salary"]);
+
+        } else if (d["Region"] == "California") {
+          californiaStartingSalaries.push(d["Starting Median Salary"]);
+
+        } else if (d["Region"] == "Northeastern") {
+          northeasternStartingSalaries.push(d["Starting Median Salary"]);
+        }
+      });
 
       // IMPORT STATE INCOMES DATASET
       const stateIncomes = await d3.csv("../datasets/incomes-by-state.csv");
-      console.log(stateIncomes);
 
-      console.log("finished")
     }
 
     visualizeData();
