@@ -42,7 +42,6 @@
         .attr("note", d=> d.id)
         .attr("d", path);
 
-
       nameData = await d3.tsv("../datasets/us-state-names.tsv");
 
       // IMPORT GRAD SALARIES DATASET
@@ -54,6 +53,21 @@
       const midwesternStartingSalaries = [];
       const californiaStartingSalaries = [];
       const northeasternStartingSalaries = [];
+
+      let regionSalaries = [];
+
+      function findMedian(dataset) {
+        dataset.sort((a,b) => a - b);
+
+        let middle = Math.floor(dataset.length / 2);
+
+        if(dataset.length % 2) {
+          return Number(dataset[middle]);
+
+        } else {
+          return ((Number(dataset[middle-1]) + Number(dataset[middle])) / 2);
+        }
+      };
 
       // Sanitizes starting median salaries for college graduates and splits by region
       gradSalaries.forEach((d) => {
@@ -76,18 +90,19 @@
         }
       });
 
-      // console.log(southernStartingSalaries);
-      // console.log(westernStartingSalaries);
-      // console.log(midwesternStartingSalaries);
-      // console.log(californiaStartingSalaries);
-      // console.log(northeasternStartingSalaries);
+      regionSalaries.push({region: "Southern", median: findMedian(southernStartingSalaries)});
+      regionSalaries.push({region: "Western", median: findMedian(westernStartingSalaries)});
+      regionSalaries.push({region: "Midwestern", median: findMedian(midwesternStartingSalaries)});
+      regionSalaries.push({region: "California", median: findMedian(californiaStartingSalaries)});
+      regionSalaries.push({region: "Northeastern", median: findMedian(northeasternStartingSalaries)});
 
-      // IMPORT STATE INCOMES DATASET
+      console.log(regionSalaries);
 
       let currentState = [];
       let currentStateName = "";
       var stateMedianIncomes = [];
 
+      // IMPORT STATE INCOMES DATASET
       d3.csv("../datasets/incomes-by-state.csv").then( function(data) {
         data.forEach(function(row) {
           if (currentState.length == 0) {
@@ -97,17 +112,7 @@
           }
 
           if (currentStateName != row.State_Name) {
-
-              currentState.sort((a,b) => a - b);
-
-              let middle = Math.floor(currentState.length / 2);
-
-              if(currentState.length % 2) {
-                stateMedianIncomes.push({state: currentStateName, median: Number(currentState[middle])});
-
-              } else {
-                stateMedianIncomes.push({state: currentStateName, median: (Number(currentState[middle-1]) + Number(currentState[middle])) / 2});
-              }
+            stateMedianIncomes.push({state: currentStateName, median: findMedian(currentState)});
 
             // let sum = 0;
             // for (i = 0; i < currentState.length; i++ ) {
@@ -126,7 +131,7 @@
           }
         });
 
-        // console.log(stateMedianIncomes);
+        console.log(stateMedianIncomes);
 
         //SIMPLIFYING STATE TO MEDIAN DATA ARRAY
         state_Median = {};
@@ -139,8 +144,6 @@
           state_ID[row.id] = row.name;
         })
 
-        console.log(state_Median);
-
         minMedian = d3.min(stateMedianIncomes, function(d) { return Math.min(d["median"]); });
         maxMedian = d3.max(stateMedianIncomes, function(d) { return Math.max(d["median"]); });
 
@@ -151,7 +154,131 @@
 
         usMap.selectAll(".state").style("fill", d => colorScale( state_Median[state_ID[d.id]]));
       });
-    };
+
+      minRegionMedian = d3.min(regionSalaries, function(d) { return Math.min(d["median"]); });
+      maxRegionMedian = d3.min(regionSalaries, function(d) { return Math.max(d["median"]); });
+
+      let radiusScale = d3.scaleLinear()
+          .domain([40000, 50000])
+          .range([60, 100]);
+
+      let regionCircles = svg.append("g").attr("class", "region circles")
+        .attr("transform","translate("+margin.left+","+margin.top+")");
+
+      regionSalaries.forEach(function(region) {
+        console.log(region.region + ": " + region.median + ", " + radiusScale(region.median));
+        if(region.region == "California") {
+          regionCircles.append("circle")
+            .attr("cx", 130)
+            .attr("cy", 300)
+            .attr("r", radiusScale(region.median))
+            .attr("fill", "#EFD494")
+            .attr("fill-opacity", .60);
+          regionCircles.append("text")
+            .attr("class", "regionText")
+            .attr("x", 130)
+            .attr("y", 290)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text(region.region);
+          regionCircles.append("text")
+            .attr("class", "regionText")
+            .attr("x", 130)
+            .attr("y", 310)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text("$" + region.median);
+
+        } if(region.region == "Southern") {
+          regionCircles.append("circle")
+            .attr("cx", 650)
+            .attr("cy", 400)
+            .attr("r", radiusScale(region.median))
+            .attr("fill", "#EFD494")
+            .attr("fill-opacity", .60);
+          regionCircles.append("text")
+              .attr("class", "regionText")
+              .attr("x", 650)
+              .attr("y", 390)
+              .attr("text-anchor", "middle")
+              .attr("dominant-baseline", "central")
+              .text(region.region);
+          regionCircles.append("text")
+              .attr("class", "regionText")
+              .attr("x", 650)
+              .attr("y", 410)
+              .attr("text-anchor", "middle")
+              .attr("dominant-baseline", "central")
+              .text("$" + region.median);
+
+        } if(region.region == "Northeastern") {
+          regionCircles.append("circle")
+            .attr("cx", 850)
+            .attr("cy", 180)
+            .attr("r", radiusScale(region.median))
+            .attr("fill", "#EFD494")
+            .attr("fill-opacity", .60);
+          regionCircles.append("text")
+            .attr("class", "regionText")
+            .attr("x", 850)
+            .attr("y", 170)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text(region.region);
+          regionCircles.append("text")
+            .attr("class", "regionText")
+            .attr("x", 850)
+            .attr("y", 190)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text("$" + region.median);
+
+        } if(region.region == "Midwestern") {
+          regionCircles.append("circle")
+            .attr("cx", 520)
+            .attr("cy", 200)
+            .attr("r", radiusScale(region.median))
+            .attr("fill", "#EFD494")
+            .attr("fill-opacity", .60);
+          regionCircles.append("text")
+            .attr("class", "regionText")
+            .attr("x", 520)
+            .attr("y", 190)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text(region.region);
+          regionCircles.append("text")
+            .attr("class", "regionText")
+            .attr("x", 520)
+            .attr("y", 210)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text("$" + region.median);
+
+        } if(region.region == "Western") {
+          regionCircles.append("circle")
+            .attr("cx", 300)
+            .attr("cy", 220)
+            .attr("r", radiusScale(region.median))
+            .attr("fill", "#EFD494")
+            .attr("fill-opacity", .60);
+          regionCircles.append("text")
+            .attr("class", "regionText")
+            .attr("x", 300)
+            .attr("y", 210)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text(region.region);
+          regionCircles.append("text")
+            .attr("class", "regionText")
+            .attr("x", 300)
+            .attr("y", 230)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text("$" + region.median);
+        }
+      });
+    }
 
     visualizeData();
   </script>
