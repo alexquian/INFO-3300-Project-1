@@ -29,6 +29,7 @@
       usMap.selectAll("path").data(usStates.features)
         .enter()
         .append("path")
+        .attr("class", "state")
         .style("fill", "white")
         .style("stroke", "none")
         .attr("d", path)
@@ -38,7 +39,11 @@
         .datum(topojson.mesh(usData, usData.objects.states))
         .style("stroke", "black")
         .style("fill", "none")
+        .attr("note", d=> d.id)
         .attr("d", path);
+
+
+      nameData = await d3.tsv("../datasets/us-state-names.tsv");
 
       // IMPORT GRAD SALARIES DATASET
       const gradSalaries = await d3.csv("../datasets/grad-salaries-by-region.csv");
@@ -119,11 +124,34 @@
           } else {
             currentState.push(row.Median);
           }
+        });
+
+        // console.log(stateMedianIncomes);
+
+        //SIMPLIFYING STATE TO MEDIAN DATA ARRAY
+        state_Median = {};
+        stateMedianIncomes.forEach(function(row) {
+          state_Median[row.state] = row.median;
+        });
+
+        state_ID = {};
+        nameData.forEach(row => {
+          state_ID[row.id] = row.name;
         })
 
-        console.log(stateMedianIncomes);
+        // console.log(state_Median);
+
+        minMedian = d3.min(stateMedianIncomes, function(d) { return Math.min(d["median"]); });
+        maxMedian = d3.max(stateMedianIncomes, function(d) { return Math.max(d["median"]); });
+
+        // console.log("Min: " + minMedian);
+        // console.log("Max: " + maxMedian);
+
+        let colorScale = d3.scaleSequential().interpolator(d3.interpolate("#f7fbff", "#08306b")).domain([minMedian,maxMedian]);
+
+        usMap.selectAll(".state").style("fill", d => colorScale( state_Median[state_ID[d.id]]));
       });
-    }
+    };
 
     visualizeData();
   </script>
