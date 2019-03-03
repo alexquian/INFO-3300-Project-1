@@ -6,10 +6,40 @@
 </head>
 
 <body>
+  <svg class="stateMap" height="650" width="1000" style="background-color:darksalmon">
+
+  </svg>
   <script>
-    const visualizeData = async() => {
+      const svg = d3.select(".stateMap");
+      const height = svg.attr("height");
+      const width = svg.attr("width");
+      const margin = {top: 30, right: 30, bottom: 30, left: 30};
+      const mapWidth = width- margin.right - margin.left;
+      const mapHeight = height - margin.top - margin.bottom;
+      const usMap = svg.append("g").attr("transform","translate("+margin.left+","+margin.top+")");
+
+      const visualizeData = async() => {
 
       // ANASTASIA: Create Map here:
+      const usData = await d3.json("../datasets/us.json");
+      let usStates = topojson.feature(usData, usData.objects.states);
+      let project = d3.geoAlbersUsa().fitSize([mapWidth, mapHeight], usStates);
+      let path = d3.geoPath().projection(project);
+
+      usMap.selectAll("path").data(usStates.features)
+        .enter()
+        .append("path")
+        .style("fill", "white")
+        .style("stroke", "none")
+        .attr("d", path)
+        .attr("note", d => d.id);
+
+      usMap.append("path")
+        .datum(topojson.mesh(usData, usData.objects.states))
+        .style("stroke", "black")
+        .style("fill", "none")
+        .attr("d", path);
+
 
       // IMPORT GRAD SALARIES DATASET
       const gradSalaries = await d3.csv("../datasets/grad-salaries-by-region.csv");
