@@ -139,7 +139,7 @@
           state_ID[row.id] = row.name;
         })
 
-        // console.log(state_Median);
+        console.log(state_Median);
 
         minMedian = d3.min(stateMedianIncomes, function(d) { return Math.min(d["median"]); });
         maxMedian = d3.max(stateMedianIncomes, function(d) { return Math.max(d["median"]); });
