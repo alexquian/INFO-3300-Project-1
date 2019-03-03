@@ -91,7 +91,7 @@
         data.forEach(function(row) {
           if (currentState.length == 0) {
             currentStateName = row.State_Name;
-            currentState.push(row.Mean);
+            currentState.push(row.Median);
 
           }
 
@@ -118,10 +118,10 @@
             // stateMeanIncomes.push({state: currentStateName, mean: mean});
             currentState = [];
             currentStateName = row.State_Name;
-            currentState.push(row.Mean);
+            currentState.push(row.Median);
 
           } else {
-            currentState.push(row.Mean);
+            currentState.push(row.Median);
           }
         })
 
