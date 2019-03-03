@@ -20,7 +20,7 @@
 
       const visualizeData = async() => {
 
-      // ANASTASIA: Create Map here:
+      // Create Map
       const usData = await d3.json("../datasets/us.json");
       let usStates = topojson.feature(usData, usData.objects.states);
       let project = d3.geoAlbersUsa().fitSize([mapWidth, mapHeight], usStates);
@@ -40,7 +40,6 @@
         .style("fill", "none")
         .attr("d", path);
 
-
       // IMPORT GRAD SALARIES DATASET
       const gradSalaries = await d3.csv("../datasets/grad-salaries-by-region.csv");
 
@@ -52,7 +51,7 @@
       const northeasternStartingSalaries = [];
 
       // Sanitizes starting median salaries for college graduates and splits by region
-      gradSalaries.forEach((d, i) => {
+      gradSalaries.forEach((d) => {
         d["Starting Median Salary"] = Number(d["Starting Median Salary"].replace(/,/g,"").replace("$",""));
 
         if (d["Region"] == "Southern") {
@@ -72,9 +71,50 @@
         }
       });
 
-      // IMPORT STATE INCOMES DATASET
-      const stateIncomes = await d3.csv("../datasets/incomes-by-state.csv");
+      // console.log(southernStartingSalaries);
+      // console.log(westernStartingSalaries);
+      // console.log(midwesternStartingSalaries);
+      // console.log(californiaStartingSalaries);
+      // console.log(northeasternStartingSalaries);
 
+      // IMPORT STATE INCOMES DATASET
+
+      function sumValues(sum, value) {
+        return sum + value;
+      }
+
+      let currentState = []
+      let currentStateName = "";
+      var stateMeanIncomes = [];
+
+      d3.csv("../datasets/incomes-by-state.csv").then( function(data) {
+        data.forEach(function(row) {
+          if (currentState.length == 0) {
+            currentStateName = row.State_Name;
+            currentState.push(row.Mean);
+
+          }
+
+          if (currentStateName != row.State_Name) {
+            let sum = 0;
+            for (i = 0; i < currentState.length; i++ ) {
+              sum += Number(currentState[i]);
+            }
+
+            let mean = sum / currentState.length;
+
+            stateMeanIncomes.push({state: currentStateName, mean: mean});
+            currentState = [];
+            currentStateName = row.State_Name;
+            currentState.push(row.Mean);
+
+          } else {
+            currentState.push(row.Mean);
+          }
+        })
+
+        // console.log(stateMeanIncomes);
+      });
     }
 
     visualizeData();
