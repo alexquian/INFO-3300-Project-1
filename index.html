@@ -85,7 +85,7 @@
 
       let currentState = []
       let currentStateName = "";
-      var stateMeanIncomes = [];
+      var stateMedianIncomes = [];
 
       d3.csv("../datasets/incomes-by-state.csv").then( function(data) {
         data.forEach(function(row) {
@@ -96,14 +96,26 @@
           }
 
           if (currentStateName != row.State_Name) {
-            let sum = 0;
-            for (i = 0; i < currentState.length; i++ ) {
-              sum += Number(currentState[i]);
-            }
 
-            let mean = sum / currentState.length;
+              currentState.sort((a,b) => a - b);
 
-            stateMeanIncomes.push({state: currentStateName, mean: mean});
+              let middle = Math.floor(currentState.length / 2);
+
+              if(currentState.length % 2) {
+                stateMedianIncomes.push({state: currentStateName, median: Number(currentState[middle])});
+
+              } else {
+                stateMedianIncomes.push({state: currentStateName, median: (Number(currentState[middle-1]) + Number(currentState[middle])) / 2});
+              }
+
+            // let sum = 0;
+            // for (i = 0; i < currentState.length; i++ ) {
+            //   sum += Number(currentState[i]);
+            // }
+            //
+            // let mean = sum / currentState.length;
+            //
+            // stateMeanIncomes.push({state: currentStateName, mean: mean});
             currentState = [];
             currentStateName = row.State_Name;
             currentState.push(row.Mean);
@@ -113,7 +125,7 @@
           }
         })
 
-        // console.log(stateMeanIncomes);
+        console.log(stateMedianIncomes);
       });
     }
 
