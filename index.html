@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <svg class="stateMap" height="650" width="1000" style="background-color:darksalmon">
+  <svg class="stateMap" height="650" width="1000">
 
   <style>
     .regionText {
@@ -174,7 +174,7 @@
 
       let radiusScale = d3.scaleLinear()
           .domain([40000, 50000])
-          .range([60, 120]);
+          .range([55, 115]);
 
       let regionCircles = svg.append("g").attr("class", "region circles")
         .attr("transform","translate("+margin.left+","+margin.top+")");
@@ -227,21 +227,21 @@
 
         } if(region.region == "Northeastern") {
           regionCircles.append("circle")
-            .attr("cx", 880)
+            .attr("cx", 870)
             .attr("cy", 150)
             .attr("r", radiusScale(region.median))
             .attr("fill", "#EFD494")
             .attr("fill-opacity", .60);
           regionCircles.append("text")
             .attr("class", "regionText")
-            .attr("x", 880)
+            .attr("x", 870)
             .attr("y", 140)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
             .text(region.region);
           regionCircles.append("text")
             .attr("class", "regionText")
-            .attr("x", 880)
+            .attr("x", 870)
             .attr("y", 160)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
