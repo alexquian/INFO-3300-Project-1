@@ -8,6 +8,20 @@
 <body>
   <svg class="stateMap" height="650" width="1000" style="background-color:darksalmon">
 
+  <style>
+    .regionText {
+      font-weight: bold;
+      font-family: Helvetica, Arial, Sans-serif;
+      text-shadow: 2px 1px 5px white;
+    }
+
+    #chartTitle {
+      font-weight: bold;
+      font-size: 22px;
+      font-family: Helvetica, Arial, Sans-serif;
+    }
+  </style>
+
   </svg>
   <script>
       const svg = d3.select(".stateMap");
@@ -160,7 +174,7 @@
 
       let radiusScale = d3.scaleLinear()
           .domain([40000, 50000])
-          .range([60, 100]);
+          .range([60, 120]);
 
       let regionCircles = svg.append("g").attr("class", "region circles")
         .attr("transform","translate("+margin.left+","+margin.top+")");
@@ -169,22 +183,22 @@
         console.log(region.region + ": " + region.median + ", " + radiusScale(region.median));
         if(region.region == "California") {
           regionCircles.append("circle")
-            .attr("cx", 130)
-            .attr("cy", 300)
+            .attr("cx", 120)
+            .attr("cy", 290)
             .attr("r", radiusScale(region.median))
             .attr("fill", "#EFD494")
             .attr("fill-opacity", .60);
           regionCircles.append("text")
             .attr("class", "regionText")
-            .attr("x", 130)
-            .attr("y", 290)
+            .attr("x", 120)
+            .attr("y", 280)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
             .text(region.region);
           regionCircles.append("text")
             .attr("class", "regionText")
-            .attr("x", 130)
-            .attr("y", 310)
+            .attr("x", 120)
+            .attr("y", 300)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
             .text("$" + region.median);
@@ -213,22 +227,22 @@
 
         } if(region.region == "Northeastern") {
           regionCircles.append("circle")
-            .attr("cx", 850)
-            .attr("cy", 180)
+            .attr("cx", 880)
+            .attr("cy", 150)
             .attr("r", radiusScale(region.median))
             .attr("fill", "#EFD494")
             .attr("fill-opacity", .60);
           regionCircles.append("text")
             .attr("class", "regionText")
-            .attr("x", 850)
-            .attr("y", 170)
+            .attr("x", 880)
+            .attr("y", 140)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
             .text(region.region);
           regionCircles.append("text")
             .attr("class", "regionText")
-            .attr("x", 850)
-            .attr("y", 190)
+            .attr("x", 880)
+            .attr("y", 160)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
             .text("$" + region.median);
@@ -278,6 +292,15 @@
             .text("$" + region.median);
         }
       });
+
+      //TITLE
+      let mapTitle = svg.append("g").attr("class", "title")
+        .attr("transform","translate("+margin.left+","+margin.top+")");
+        mapTitle.append("text").attr("id", "chartTitle")
+          .attr("x", (mapWidth/2))
+          .attr("y", (0))
+          .attr("text-anchor", "middle")
+          .text("Median Starting Salary of College Graduates by Region Compared to Median Income by State");
     }
 
     visualizeData();
