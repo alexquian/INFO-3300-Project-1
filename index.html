@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <svg class="stateMap" height="650" width="1000">
+  <svg class="stateMap" height="670" width="1000">
 
   <style>
     .regionText {
@@ -31,6 +31,9 @@
       const mapWidth = width- margin.right - margin.left;
       const mapHeight = height - margin.top - margin.bottom;
       const usMap = svg.append("g").attr("transform","translate("+margin.left+","+margin.top+")");
+
+      let min_Median = 0;
+      let max_Median = 0;
 
       const visualizeData = async() => {
 
@@ -110,7 +113,7 @@
       regionSalaries.push({region: "California", median: findMedian(californiaStartingSalaries)});
       regionSalaries.push({region: "Northeastern", median: findMedian(northeasternStartingSalaries)});
 
-      console.log(regionSalaries);
+      // console.log(regionSalaries);
 
       let currentState = [];
       let currentStateName = "";
@@ -145,7 +148,7 @@
           }
         });
 
-        console.log(stateMedianIncomes);
+        // console.log(stateMedianIncomes);
 
         //SIMPLIFYING STATE TO MEDIAN DATA ARRAY
         state_Median = {};
@@ -158,16 +161,63 @@
           state_ID[row.id] = row.name;
         })
 
-        minMedian = d3.min(stateMedianIncomes, function(d) { return Math.min(d["median"]); });
-        maxMedian = d3.max(stateMedianIncomes, function(d) { return Math.max(d["median"]); });
+        let minMedian = d3.min(stateMedianIncomes, function(d) { return Math.min(d["median"]); });
+        let maxMedian = d3.max(stateMedianIncomes, function(d) { return Math.max(d["median"]); });
 
-        // console.log("Min: " + minMedian);
-        // console.log("Max: " + maxMedian);
-
-        let colorScale = d3.scaleSequential().interpolator(d3.interpolate("#f7fbff", "#08306b")).domain([minMedian,maxMedian]);
+        let colorScale = d3.scaleSequential(d3.interpolateRgb("#f7fbff", "#08306b")).domain([minMedian,maxMedian]);
 
         usMap.selectAll(".state").style("fill", d => colorScale( state_Median[state_ID[d.id]]));
+
+         //LEGEND
+        let definition = svg.append("defs");
+
+        let linearGradient = definition.append("linearGradient")
+        .attr("id", "linear_gradient")
+        .attr("x1","0%")
+        .attr("x2", "100%")
+        .attr("y1", "100%")
+        .attr("y2", "100%");
+
+        //scale for legend
+        let xScale = d3.scaleLinear()
+        .domain([minMedian, maxMedian])
+        .range([margin.right, (width-margin.right-1)]);
+
+        let xAxis = d3.axisBottom(xScale)
+        .ticks(3);
+
+        svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + margin.right + ", " + (height-20) + ")")
+        .call(xAxis);
+
+        svg.append("text")
+        .attr("class", "legend_title")
+        .text("Median Household Income")
+        .style("text-anchor", "middle")
+        .attr("x", 550)
+        .attr("y", (height-50));
+
+        //color at the start of gradient
+        linearGradient.append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#f7fbff");
+
+        //color at end of gradient
+        linearGradient.append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#08306b");
+
+        //drawing rectangle for legend
+        svg.append("rect")
+        .attr("width", mapWidth)
+        .attr("height", 20)
+        .attr("x", margin.right + margin.left)
+        .attr("y", mapHeight + 15)
+        .style("fill", "url(#linear_gradient)");
+
       });
+
 
       minRegionMedian = d3.min(regionSalaries, function(d) { return Math.min(d["median"]); });
       maxRegionMedian = d3.min(regionSalaries, function(d) { return Math.max(d["median"]); });
@@ -180,7 +230,7 @@
         .attr("transform","translate("+margin.left+","+margin.top+")");
 
       regionSalaries.forEach(function(region) {
-        console.log(region.region + ": " + region.median + ", " + radiusScale(region.median));
+        // console.log(region.region + ": " + region.median + ", " + radiusScale(region.median));
         if(region.region == "California") {
           regionCircles.append("circle")
             .attr("cx", 120)
@@ -290,9 +340,10 @@
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
             .text("$" + region.median);
+
         }
       });
-
+      
       //TITLE
       let mapTitle = svg.append("g").attr("class", "title")
         .attr("transform","translate("+margin.left+","+margin.top+")");
@@ -301,7 +352,9 @@
           .attr("y", (0))
           .attr("text-anchor", "middle")
           .text("Median Starting Salary of College Graduates by Region Compared to Median Income by State");
+
     }
+
 
     visualizeData();
   </script>
