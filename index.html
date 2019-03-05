@@ -73,16 +73,15 @@
 
       //california region
       d3.json("../datasets/us.json").then(function(us) {
-          svg.selectAll(null)
+          usMap.selectAll(null)
           .data(california)
           .enter()
           .append("path")
           .attr("d", function(datum) {
-              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) {
               return datum.states.indexOf(id_2_state[state.id]) > -1; }))
             return path(feature);
           })
-          .attr("transform", "translate(30,30)")
           .attr("fill","none")
           .attr("stroke","orange")
           .attr("stroke-width",3);
@@ -90,16 +89,15 @@
 
       //western region
       d3.json("../datasets/us.json").then(function(us) {
-          svg.selectAll(null)
+          usMap.selectAll(null)
           .data(western)
           .enter()
           .append("path")
           .attr("d", function(datum) {
-              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) {
               return datum.states.indexOf(id_2_state[state.id]) > -1; }))
             return path(feature);
           })
-          .attr("transform", "translate(30,30)")
           .attr("fill","none")
           .attr("stroke","red")
           .attr("stroke-width",3);
@@ -107,51 +105,48 @@
 
       //midwestern region
       d3.json("../datasets/us.json").then(function(us) {
-          svg.selectAll(null)
+          usMap.selectAll(null)
           .data(midwestern)
           .enter()
           .append("path")
           .attr("d", function(datum) {
-              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) {
               return datum.states.indexOf(id_2_state[state.id]) > -1; }))
             return path(feature);
           })
-          .attr("transform", "translate(30,30)")
           .attr("fill","none")
           .attr("stroke","black")
           .attr("stroke-width",3);
       });
 
-      //midwestern region
+      //southern region
       d3.json("../datasets/us.json").then(function(us) {
-          svg.selectAll(null)
+          usMap.selectAll(null)
           .data(southern)
           .enter()
           .append("path")
           .attr("d", function(datum) {
-              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) {
               return datum.states.indexOf(id_2_state[state.id]) > -1; }))
             return path(feature);
           })
-          .attr("transform", "translate(30,30)")
           .attr("fill","none")
           .attr("stroke","green")
           .attr("stroke-width",3);
-      
+
       });
 
       //northeastern region
       d3.json("../datasets/us.json").then(function(us) {
-          svg.selectAll(null)
+          usMap.selectAll(null)
           .data(northeastern)
           .enter()
           .append("path")
           .attr("d", function(datum) {
-              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) {
               return datum.states.indexOf(id_2_state[state.id]) > -1; }))
             return path(feature);
           })
-          .attr("transform", "translate(30,30)")
           .attr("fill","none")
           .attr("stroke","purple")
           .attr("stroke-width",3);
@@ -315,6 +310,15 @@
 
       });
 
+      //TITLE
+      let mapTitle = svg.append("g").attr("class", "title")
+        .attr("transform","translate("+margin.left+","+margin.top+")");
+        mapTitle.append("text").attr("id", "chartTitle")
+          .attr("x", (mapWidth/2))
+          .attr("y", (0))
+          .attr("text-anchor", "middle")
+          .text("Median Starting Salary of College Graduates by Region Compared to Median Income by State");
+
 
       minRegionMedian = d3.min(regionSalaries, function(d) { return Math.min(d["median"]); });
       maxRegionMedian = d3.min(regionSalaries, function(d) { return Math.max(d["median"]); });
@@ -440,16 +444,6 @@
 
         }
       });
-      
-      //TITLE
-      let mapTitle = svg.append("g").attr("class", "title")
-        .attr("transform","translate("+margin.left+","+margin.top+")");
-        mapTitle.append("text").attr("id", "chartTitle")
-          .attr("x", (mapWidth/2))
-          .attr("y", (0))
-          .attr("text-anchor", "middle")
-          .text("Median Starting Salary of College Graduates by Region Compared to Median Income by State");
-
     }
 
 
