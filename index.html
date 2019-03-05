@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <svg class="stateMap" height="670" width="1000"></svg>
+  <svg class="stateMap" height="670" width="1000" style="display: block; margin: 0 auto;"></svg>
 
   <style>
     .regionText {
@@ -42,7 +42,7 @@
       const height = svg.attr("height");
       const width = svg.attr("width");
       const margin = {top: 30, right: 30, bottom: 30, left: 30};
-      const mapWidth = width- margin.right - margin.left;
+      const mapWidth = width - margin.right - margin.left;
       const mapHeight = height - margin.top - margin.bottom;
       const usMap = svg.append("g").attr("transform","translate("+margin.left+","+margin.top+")");
 
@@ -303,14 +303,14 @@
 
         svg.append("g")
         .attr("class", "axis")
-        .attr("transform", "translate(" + margin.right + ", " + (height-20) + ")")
+        .attr("transform", "translate(0, " + (height-20) + ")")
         .call(xAxis);
 
         svg.append("text")
         .attr("id", "legend_title")
         .text("Median Household Income")
         .style("text-anchor", "middle")
-        .attr("x", 550)
+        .attr("x", width/2)
         .attr("y", (height-50));
 
         //color at the start of gradient
@@ -327,7 +327,7 @@
         svg.append("rect")
         .attr("width", mapWidth)
         .attr("height", 20)
-        .attr("x", margin.right + margin.left)
+        .attr("x", margin.left)
         .attr("y", mapHeight + 15)
         .style("fill", "url(#linear_gradient)");
 
@@ -558,34 +558,22 @@
       stateToRegionSalaries.push({region: "Midwestern", median: findMedian(midwesternStates)});
       stateToRegionSalaries.push({region: "California", median: findMedian(californianStates)});
       stateToRegionSalaries.push({region: "Northeastern", median: findMedian(northeasternStates)});
-
     }
 
     visualizeData();
   </script>
 
   <p class="blurb">
-    This chloropleth map visualizes median household income on a single-hue sequential scale. 5 US regions
-    (Northeastern, Southern, Midwestern, Western, and California) are outlined by unique colors. This
-    map is overlaid with circles which represent the median starting salary of college graduates who
-    attended college in the region that corresponds to the circle's color. The radius of the circle
-    is determined by a linear scale, which assigns a radius based on the median starting salary of college
-    graduates from that region.
+    This chloropleth map visualizes me(dian household income. 5 US regions (Northeastern, Southern, Midwestern,
+    Western, and California) are outlined by unique colors. Circles representing the median starting salary (filled circles)
+    and median mid-career salaries (outlined circles) of college graduates who attended school in the region
+     have been overlaid on the map.
 
     <br/>
     <br/>
 
     The purpose of this visualization is to explore whether graduating college in "wealthier" regions correlates
-    with a higher starting salary. The combination of the chloropleth map and the circles help illustrate any
-    correlations that may exist between the median household income of a state (i.e. the relative wealth of that
-    state compared to other states) and the starting salary. The color of the states combined with the area and
-    labels of the circles provides an effective visual comparison of any disparities that may exist.
-
-    <br/>
-    <br/>
-
-    The visualization provides evidence of a small but positive correlation between the wealth of the region and
-    the starting income of college graduates from that region.
+    with a higher starting and mid-career salary.
   </p>
 
 </body>
