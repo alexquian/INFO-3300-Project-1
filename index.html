@@ -26,6 +26,16 @@
       font-size: 14px;
       font-family: Helvetica, Arial, Sans-serif;
     }
+
+    .blurb {
+      margin: 0 auto;
+      margin-top: 30px;
+      display: block;
+      width: 60%;
+      font-size: 14px;
+      font-family: Helvetica, Arial, Sans-serif;
+    }
+
   </style>
   <script>
       const svg = d3.select(".stateMap");
@@ -229,14 +239,6 @@
           if (currentStateName != row.State_Name) {
             stateMedianIncomes.push({state: currentStateName, median: findMedian(currentState)});
 
-            // let sum = 0;
-            // for (i = 0; i < currentState.length; i++ ) {
-            //   sum += Number(currentState[i]);
-            // }
-            //
-            // let mean = sum / currentState.length;
-            //
-            // stateMeanIncomes.push({state: currentStateName, mean: mean});
             currentState = [];
             currentStateName = row.State_Name;
             currentState.push(row.Median);
@@ -245,8 +247,6 @@
             currentState.push(row.Median);
           }
         });
-
-        // console.log(stateMedianIncomes);
 
         //SIMPLIFYING STATE TO MEDIAN DATA ARRAY
         state_Median = {};
@@ -282,7 +282,7 @@
         .range([margin.right, (width-margin.right-1)]);
 
         let xAxis = d3.axisBottom(xScale)
-        .ticks(3);
+        .ticks(5);
 
         svg.append("g")
         .attr("class", "axis")
@@ -507,6 +507,30 @@
 
     visualizeData();
   </script>
+
+  <p class="blurb">
+    This chloropleth map visualizes median household income on a single-hue sequential scale. 5 US regions
+    (Northeastern, Southern, Midwestern, Western, and California) are outlined by unique colors. This
+    map is overlaid with circles which represent the median starting salary of college graduates who
+    attended college in the region that corresponds to the circle's color. The radius of the circle
+    is determined by a linear scale, which assigns a radius based on the median starting salary of college
+    graduates from that region.
+
+    </br>
+    </br>
+
+    The purpose of this visualization is to explore whether graduating college in "wealthier" regions correlates
+    with a higher starting salary. The combination of the chloropleth map and the circles help illustrate any
+    correlations that may exist between the median household income of a state (i.e. the relative wealth of that
+    state compared to other states) and the starting salary. The color of the states combined with the area and
+    labels of the circles provides an effective visual comparison of any disparities that may exist.
+
+    </br>
+    </br>
+
+    The visualization provides evidence of a small but positive correlation between the wealth of the region and
+    the starting income of college graduates from that region.
+  </p>
 
 </body>
 
