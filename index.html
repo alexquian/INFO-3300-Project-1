@@ -6,8 +6,7 @@
 </head>
 
 <body>
-  <svg class="stateMap" height="670" width="1000" style="float: left"></svg>
-  <svg class="rMap" height="670" width="500" style="float: right"></svg>
+  <svg class="stateMap" height="670" width="1000"></svg>
 
   <style>
     .regionText {
@@ -19,6 +18,12 @@
     #chartTitle {
       font-weight: bold;
       font-size: 22px;
+      font-family: Helvetica, Arial, Sans-serif;
+    }
+
+    #legend_title {
+      font-weight: bold;
+      font-size: 14px;
       font-family: Helvetica, Arial, Sans-serif;
     }
   </style>
@@ -285,7 +290,7 @@
         .call(xAxis);
 
         svg.append("text")
-        .attr("class", "legend_title")
+        .attr("id", "legend_title")
         .text("Median Household Income")
         .style("text-anchor", "middle")
         .attr("x", 550)
@@ -485,6 +490,7 @@
           {
               midwesternStates.push(d['Median'])
           }
+
           if(d['State_Name'] == 'California')
           {
               californianStates.push(d['Median'])
