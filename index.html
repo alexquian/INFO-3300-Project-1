@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <svg class="stateMap" height="670" width="1000">
+  <svg class="stateMap" height="670" width="1000"></svg>
 
   <style>
     .regionText {
@@ -21,8 +21,6 @@
       font-family: Helvetica, Arial, Sans-serif;
     }
   </style>
-
-  </svg>
   <script>
       const svg = d3.select(".stateMap");
       const height = svg.attr("height");
@@ -31,9 +29,6 @@
       const mapWidth = width- margin.right - margin.left;
       const mapHeight = height - margin.top - margin.bottom;
       const usMap = svg.append("g").attr("transform","translate("+margin.left+","+margin.top+")");
-
-      let min_Median = 0;
-      let max_Median = 0;
 
       const visualizeData = async() => {
 
