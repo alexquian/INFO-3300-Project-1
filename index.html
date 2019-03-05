@@ -7,6 +7,7 @@
 
 <body>
   <svg class="stateMap" height="670" width="1000" style="display: block; margin: 0 auto;"></svg>
+  <svg class="mapLegend" height="150" width="1000" style="display: block; margin: 0 auto; margin-top: 20px;"></svg>
 
   <style>
     .regionText {
@@ -21,19 +22,35 @@
       font-family: Helvetica, Arial, Sans-serif;
     }
 
-    #legend_title {
+    .legendTitle {
       font-weight: bold;
+      font-size: 16px;
+      font-family: Helvetica, Arial, Sans-serif;
+    }
+
+    .legendText {
       font-size: 14px;
+      font-family: Helvetica, Arial, Sans-serif;
+    }
+
+    #typeTitle {
+      font-weight: bold;
+      font-size: 22px;
       font-family: Helvetica, Arial, Sans-serif;
     }
 
     .blurb {
       margin: 0 auto;
-      margin-top: 30px;
+      margin-bottom: 100px;
       display: block;
-      width: 60%;
-      font-size: 14px;
+      width: 80%;
+      font-size: 16px;
       font-family: Helvetica, Arial, Sans-serif;
+    }
+
+    .bold {
+      font-weight: bold;
+      font-size: 20px;
     }
 
   </style>
@@ -307,7 +324,7 @@
         .call(xAxis);
 
         svg.append("text")
-        .attr("id", "legend_title")
+        .attr("class", "legendTitle")
         .text("Median Household Income")
         .style("text-anchor", "middle")
         .attr("x", width/2)
@@ -507,67 +524,69 @@
         }
       });
 
-      // assigning states to regions
-      southernStates=[];
-      northeasternStates=[];
-      midwesternStates=[];
-      westernStates=[];
-      californianStates=[];
-      stateToRegionSalaries=[];
+      let legend = d3.select(".mapLegend");
+      let legendWidth = legend.attr("width");
+      let legendHeight = legend.attr("height") - 50;
 
-      const statestoRegion = await d3.csv("../datasets/incomes-by-state.csv");
-      statestoRegion.forEach(function(d){
-          // Texas, District of Columbia, Georgia, North Carolina, South Carolina, Virginia, Maryland, Florida, Louisiana, Delaware, Oklahoma, Arkansas, Alabama, Tennessee, Kentucky, Mississippi, and West Virginia
-          if(d['State_Name'] == 'Alabama' || d['State_Name'] == 'Florida' || d['State_Name'] =='Texas'|| d['State_Name'] =='District of Columbia'||d['State_Name'] =='Georgia'||
-          d['State_Name'] =='North Carolina'||d['State_Name'] =='South Carolina'||d['State_Name'] =='Virginia'||d['State_Name'] =='Maryland'||d['State_Name'] =='Louisiana'||
-          d['State_Name'] =='Delaware'||d['State_Name'] =='Oklahoma'||d['State_Name'] =='Arkansas'||d['State_Name'] =='Tennessee'||d['State_Name'] =='Kentucky'||d['State_Name'] =='Mississippi'||
-          d['State_Name'] =='West Virginia')
-          {
-              southernStates.push(d['Median'])
-          }
-          //Colorado, New Mexico, Arizona, Washington, Utah, Oregon, Nevada, Idaho, Wyoming, Montana, Hawaii, and Alaska
-          if(d['State_Name'] =='Colorado'||d['State_Name'] =='New Mexico'||d['State_Name'] =='Arizona'||d['State_Name'] =='Washington'||d['State_Name'] =='Utah'||d['State_Name'] =='Oregon'
-          ||d['State_Name'] =='Nevada'||d['State_Name'] =='Idaho'||d['State_Name'] =='Wyoming'||d['State_Name'] =='Montana'||d['State_Name'] =='Hawaii'||d['State_Name'] =='Alaska')
-          {
-              westernStates.push(d['Median'])
-          }
+      legend.append("text")
+      .attr("class", "legendTitle")
+      .text("Map Legend")
+      .style("text-anchor", "middle")
+      .attr("x", legendWidth/2)
+      .attr("y", 20);
 
-          // Connecticut, Massachusetts, New Jersey, Pennsylvania, New York, Rhode Island, New Hampshire, Vermont, Maine
-          if(d['State_Name'] =='Connecticut'||d['State_Name'] =='Massachusetts'||d['State_Name'] =='New Jersey'||d['State_Name'] =='Pennsylvania'||d['State_Name'] =='New York'
-          ||d['State_Name'] =='Rhode Island'||d['State_Name'] =='New Hampshire'||d['State_Name'] =='Vermont'||d['State_Name'] =='Maine')
-          {
-              northeasternStates.push(d['Median']);
-          }
+      legend.append("circle")
+        .attr("cx", legendWidth/10)
+        .attr("cy", (legendHeight/2)+5)
+        .attr("r", 25)
+        .attr("fill", "#9370A0")
+        .attr("fill-opacity", .45);
 
-          //Indiana, Illinois, Missouri, Wisconsin, Michigan, Iowa, Ohio, Kansas, North Dakota, South Dakota, Minnesota, and Nebraska
-          if(d['State_Name'] =='Indiana'||d['State_Name'] =='Illinois'||d['State_Name'] =='Missouri'||d['State_Name'] =='Wisconsin'||d['State_Name'] =='Michigan'
-          ||d['State_Name'] =='Iowa'||d['State_Name'] =='Ohio'||d['State_Name'] =='Kansas'||d['State_Name'] =='North Dakota'||d['State_Name'] =='South Dakota'
-          ||d['State_Name'] =='Minnesota'||d['State_Name'] =='Nebraska')
-          {
-              midwesternStates.push(d['Median'])
-          }
+      legend.append("text")
+        .attr("class", "legendText")
+        .text("Median Starting Salary for College Graduates")
+        .style("dominant-baseline", "central")
+        .style("text-anchor", "start")
+        .attr("x", legendWidth/10 + 35)
+        .attr("y", (legendHeight/2)+5);
 
-          if(d['State_Name'] == 'California')
-          {
-              californianStates.push(d['Median'])
-          }
-      });
+      legend.append("circle")
+        .attr("cx", (legendWidth/10)*6)
+        .attr("cy", (legendHeight/2)+5)
+        .attr("r", 21)
+        .attr("fill", "none")
+        .attr("stroke", "#9370A0")
+        .attr("stroke-width", "4px")
+        .attr("stroke-opacity", .45);
 
-      stateToRegionSalaries.push({region: "Southern", median: findMedian(southernStates)});
-      stateToRegionSalaries.push({region: "Western", median: findMedian(westernStates)});
-      stateToRegionSalaries.push({region: "Midwestern", median: findMedian(midwesternStates)});
-      stateToRegionSalaries.push({region: "California", median: findMedian(californianStates)});
-      stateToRegionSalaries.push({region: "Northeastern", median: findMedian(northeasternStates)});
+      legend.append("text")
+        .attr("class", "legendText")
+        .text("Median Mid-Career Salary for College Graduates")
+        .style("dominant-baseline", "central")
+        .style("text-anchor", "start")
+        .attr("x", ((legendWidth/10)*6) + 35)
+        .attr("y", (legendHeight/2)+5);
+
+      legend.append("text")
+        .attr("class", "legendText")
+        .text("Color of circle indicates region described by the data")
+        .style("dominant-baseline", "central")
+        .style("text-anchor", "middle")
+        .attr("x", legendWidth/2)
+        .attr("y", (legendHeight)+10);
+
     }
 
     visualizeData();
   </script>
 
   <p class="blurb">
-    This chloropleth map visualizes me(dian household income. 5 US regions (Northeastern, Southern, Midwestern,
+    <span class="bold">Visualization Overview</span>
+    <br/>
+    This chloropleth map visualizes median household income. 5 US regions (Northeastern, Southern, Midwestern,
     Western, and California) are outlined by unique colors. Circles representing the median starting salary (filled circles)
     and median mid-career salaries (outlined circles) of college graduates who attended school in the region
-     have been overlaid on the map.
+    have been overlaid on the map.
 
     <br/>
     <br/>
@@ -575,6 +594,178 @@
     The purpose of this visualization is to explore whether graduating college in "wealthier" regions correlates
     with a higher starting and mid-career salary.
   </p>
+
+  <svg class="typePlot" height="1000" width="1000" style="margin: 0 auto; display: block"></svg>
+
+  <script>
+      const svgType = d3.select(".typePlot");
+      const showTypePlot = async() => {
+
+      // IMPORT GRAD SALARIES DATASET
+      const typeCollege = await d3.csv("../datasets/salaries-by-college-type.csv");
+
+      // Initialize starting salaries
+      const stateSalaries = [];
+      const artsSalaries = [];
+      const partySalaries = [];
+      const engineeringSalaries = [];
+      const ivySalaries = [];
+
+      const stateSalariesMid = [];
+      const artsSalariesMid = [];
+      const partySalariesMid = [];
+      const engineeringSalariesMid = [];
+      const ivySalariesMid = [];
+
+      let typeStart = [];
+      let typeMid = [];
+
+      function findMedianType(dataset) {
+        dataset.sort((a,b) => a - b);
+
+        let middle = Math.floor(dataset.length / 2);
+
+        if(dataset.length % 2) {
+          return Number(dataset[middle]);
+
+        } else {
+          return ((Number(dataset[middle-1]) + Number(dataset[middle])) / 2);
+        }
+      };
+
+      // college types - STARTING salary
+      typeCollege.forEach((d) => {
+        d["Starting Median Salary"] = Number(d["Starting Median Salary"].replace(/,/g,"").replace("$",""));
+
+        if (d["School Type"] == "State") {
+          stateSalaries.push(d["Starting Median Salary"]);
+
+        } else if (d["School Type"] == "Liberal Arts") {
+          artsSalaries.push(d["Starting Median Salary"]);
+
+        } else if (d["School Type"] == "Party") {
+          partySalaries.push(d["Starting Median Salary"]);
+
+        } else if (d["School Type"] == "Engineering") {
+          engineeringSalaries.push(d["Starting Median Salary"]);
+
+        } else if (d["School Type"] == "Ivy League") {
+          ivySalaries.push(d["Starting Median Salary"]);
+        }
+      });
+
+      typeStart.push({type: "State", median: findMedianType(stateSalaries)});
+      typeStart.push({type: "Liberal Arts", median: findMedianType(artsSalaries)});
+      typeStart.push({type: "Party", median: findMedianType(partySalaries)});
+      typeStart.push({type: "Engineering", median: findMedianType(engineeringSalaries)});
+      typeStart.push({type: "Ivy", median: findMedianType(ivySalaries)});
+      console.log(typeStart);
+
+      // college types - MID CAREER salary
+
+      typeCollege.forEach((d) => {
+        d["Mid-Career Median Salary"] = Number(d["Mid-Career Median Salary"].replace(/,/g,"").replace("$",""));
+
+        if (d["School Type"] == "State") {
+          stateSalariesMid.push(d["Mid-Career Median Salary"]);
+
+        } else if (d["School Type"] == "Liberal Arts") {
+          artsSalariesMid.push(d["Mid-Career Median Salary"]);
+
+        } else if (d["School Type"] == "Party") {
+          partySalariesMid.push(d["Mid-Career Median Salary"]);
+
+        } else if (d["School Type"] == "Engineering") {
+          engineeringSalariesMid.push(d["Mid-Career Median Salary"]);
+
+        } else if (d["School Type"] == "Ivy League") {
+          ivySalariesMid.push(d["Mid-Career Median Salary"]);
+        }
+      });
+
+      typeMid.push({type: "State", median: findMedianType(stateSalariesMid)});
+      typeMid.push({type: "Liberal Arts", median: findMedianType(artsSalariesMid)});
+      typeMid.push({type: "Party", median: findMedianType(partySalariesMid)});
+      typeMid.push({type: "Engineering", median: findMedianType(engineeringSalariesMid)});
+      typeMid.push({type: "Ivy", median: findMedianType(ivySalariesMid)});
+      console.log(typeMid);
+
+      minStart = d3.min(typeStart, function(d) {return Math.min(d['median']); });
+      maxStart = d3.max(typeStart, function(d) {return Math.max(d['median']); });
+      minMid = d3.min(typeMid, function(d) {return Math.min(d['median']); });
+      maxMid = d3.max(typeMid, function(d) {return Math.max(d['median']); });
+      console.log(minStart);
+      console.log(maxStart);
+      console.log(minMid);
+      console.log(maxMid);
+
+    Together = [];
+      Together.push({type: 1, medianStart: findMedianType(stateSalaries), medianMid: findMedianType(stateSalariesMid)});
+      Together.push({type: 2, medianStart: findMedianType(artsSalaries), medianMid: findMedianType(artsSalariesMid)});
+      Together.push({type: 3, medianStart: findMedianType(partySalaries), medianMid: findMedianType(partySalariesMid)});
+      Together.push({type: 4, medianStart: findMedianType(engineeringSalaries), medianMid: findMedianType(engineeringSalariesMid)});
+      Together.push({type: 5, medianStart: findMedianType(ivySalaries), medianMid: findMedianType(ivySalariesMid)});
+
+      let typePlot = svgType.append("g").attr("class", "typePlot")
+        .attr("width","1000")
+        .attr("height","1000");
+      let widthType = typePlot.attr("width");
+      let heightType = typePlot.attr("height");
+
+    //scale & axis
+    typeScale = d3.scaleLinear()
+        .domain([minStart-1000, maxMid+1000])
+        .range([525,25]);
+    xScale = d3.scaleLinear()
+        .domain([0,6])
+        .range([100,700]);
+    let yaxisType = d3.axisLeft(typeScale)
+        .ticks(10);
+    let yaxisType2 = svgType.append("g")
+        .attr("transform","translate(50,0)")
+        .call(yaxisType);
+
+    let typeLabels = ['','State','Liberal Arts','Party','Engineering','Ivy league',''];
+    let xaxisType = d3.axisBottom(xScale)
+        .ticks(5)
+        .tickFormat(function(d,i) { return typeLabels[i]; })
+    let xaxisType2 = svgType.append("g")
+        .attr("transform","translate(0,550)")
+        .call(xaxisType);
+
+     // Start points
+     Together.forEach(function(d,i){
+        svgType.append("line")
+        .attr("x1", (100+(100*d['type'])-12.5))
+        .attr("x2", (100+(100*d['type'])-12.5))
+        .attr("y1", typeScale(d['medianStart']))
+        .attr("y2", 550)
+        .style("stroke","blue")
+        .style("stroke-width",25)
+    });
+
+    // Mid points
+    Together.forEach(function(d,i){
+        svgType.append("line")
+        .attr("x1", (100+(100*d['type'])+12.5))
+        .attr("x2", (100+(100*d['type'])+12.5))
+        .attr("y1", typeScale(d['medianMid']))
+        .attr("y2", 550)
+        .style("stroke","red")
+        .style("stroke-width",25)
+    });
+
+      //TITLE
+      let mapTitleType = svgType.append("g").attr("class", "title")
+        mapTitleType.append("text").attr("id", "typeTitle")
+          .attr("x", (widthType/2))
+          .attr("y", (20))
+          .attr("text-anchor", "middle")
+          .text("Type of School vs Starting and Median Salary");
+    }
+
+    showTypePlot();
+  </script>
 
 </body>
 
