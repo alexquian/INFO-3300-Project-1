@@ -54,7 +54,109 @@
         .attr("note", d=> d.id)
         .attr("d", path);
 
+    //MAKING THE REGIONS ON THE MAP
+      let projection = d3.geoAlbersUsa().fitSize([mapWidth, mapHeight], usStates);
+      let path2 = d3.geoPath().projection(projection);
+
       nameData = await d3.tsv("../datasets/us-state-names.tsv");
+
+      let id_2_state = {};
+      nameData.forEach(function(row) {
+          id_2_state[row.id] = row.code;
+      });
+
+      let california = [{"name": "california", "states":["CA"]}];
+      let western = [{"name": "western", "states":["CO", "NM", "AZ", "WA", "UT", "OR", "NV", "ID", "WY", "MT", "HI", "AK"]}];
+      let midwestern = [{"name": "midwestern", "states":["IN", "IL", "MO", "WI", "MI", "IA", "OH", "KS", "ND", "SD", "MN", "NE"]}];
+      let southern = [{"name": "southern", "states":["TX", "GA", "NC", "SC", "VA", "MD", "FL", "LA","DE", "OK", "AR", "AL", "TN", "KY", "MS", "WV"]}];
+      let northeastern = [{"name": "northeastern", "states":["CT", "MA", "NJ", "PA", "NY", "RI", "NH", "VT", "ME"]}];
+
+      //california region
+      d3.json("../datasets/us.json").then(function(us) {
+          svg.selectAll(null)
+          .data(california)
+          .enter()
+          .append("path")
+          .attr("d", function(datum) {
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              return datum.states.indexOf(id_2_state[state.id]) > -1; }))
+            return path(feature);
+          })
+          .attr("transform", "translate(30,30)")
+          .attr("fill","none")
+          .attr("stroke","orange")
+          .attr("stroke-width",3);
+      });
+
+      //western region
+      d3.json("../datasets/us.json").then(function(us) {
+          svg.selectAll(null)
+          .data(western)
+          .enter()
+          .append("path")
+          .attr("d", function(datum) {
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              return datum.states.indexOf(id_2_state[state.id]) > -1; }))
+            return path(feature);
+          })
+          .attr("transform", "translate(30,30)")
+          .attr("fill","none")
+          .attr("stroke","red")
+          .attr("stroke-width",3);
+      });
+
+      //midwestern region
+      d3.json("../datasets/us.json").then(function(us) {
+          svg.selectAll(null)
+          .data(midwestern)
+          .enter()
+          .append("path")
+          .attr("d", function(datum) {
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              return datum.states.indexOf(id_2_state[state.id]) > -1; }))
+            return path(feature);
+          })
+          .attr("transform", "translate(30,30)")
+          .attr("fill","none")
+          .attr("stroke","black")
+          .attr("stroke-width",3);
+      });
+
+      //midwestern region
+      d3.json("../datasets/us.json").then(function(us) {
+          svg.selectAll(null)
+          .data(southern)
+          .enter()
+          .append("path")
+          .attr("d", function(datum) {
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              return datum.states.indexOf(id_2_state[state.id]) > -1; }))
+            return path(feature);
+          })
+          .attr("transform", "translate(30,30)")
+          .attr("fill","none")
+          .attr("stroke","green")
+          .attr("stroke-width",3);
+      
+      });
+
+      //northeastern region
+      d3.json("../datasets/us.json").then(function(us) {
+          svg.selectAll(null)
+          .data(northeastern)
+          .enter()
+          .append("path")
+          .attr("d", function(datum) {
+              var feature = topojson.merge(us, us.objects.states.geometries.filter(function(state) { 
+              return datum.states.indexOf(id_2_state[state.id]) > -1; }))
+            return path(feature);
+          })
+          .attr("transform", "translate(30,30)")
+          .attr("fill","none")
+          .attr("stroke","purple")
+          .attr("stroke-width",3);
+        });
+
 
       // IMPORT GRAD SALARIES DATASET
       const gradSalaries = await d3.csv("../datasets/grad-salaries-by-region.csv");
