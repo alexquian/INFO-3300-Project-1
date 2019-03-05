@@ -115,7 +115,7 @@
             return path(feature);
           })
           .attr("fill","none")
-          .attr("stroke","#804993")
+          .attr("stroke","#E07A5F")
           .attr("stroke-width",3);
       });
 
@@ -131,7 +131,7 @@
             return path(feature);
           })
           .attr("fill","none")
-          .attr("stroke","#E07A5F")
+          .attr("stroke","#804993")
           .attr("stroke-width",3);
       });
 
@@ -179,7 +179,14 @@
       const californiaStartingSalaries = [];
       const northeasternStartingSalaries = [];
 
-      let regionSalaries = [];
+      const southernMidSalaries = [];
+      const westernMidSalaries = [];
+      const midwesternMidSalaries = [];
+      const californiaMidSalaries = [];
+      const northeasternMidSalaries = [];
+
+      let regionStartingSalaries = [];
+      let regionMidSalaries = [];
 
       function findMedian(dataset) {
         dataset.sort((a,b) => a - b);
@@ -197,31 +204,41 @@
       // Sanitizes starting median salaries for college graduates and splits by region
       gradSalaries.forEach((d) => {
         d["Starting Median Salary"] = Number(d["Starting Median Salary"].replace(/,/g,"").replace("$",""));
+        d["Mid-Career Median Salary"] = Number(d["Mid-Career Median Salary"].replace(/,/g,"").replace("$",""));
 
         if (d["Region"] == "Southern") {
           southernStartingSalaries.push(d["Starting Median Salary"]);
+          southernMidSalaries.push(d["Mid-Career Median Salary"]);
 
         } else if (d["Region"] == "Western") {
           westernStartingSalaries.push(d["Starting Median Salary"]);
+          westernMidSalaries.push(d["Mid-Career Median Salary"]);
 
         } else if (d["Region"] == "Midwestern") {
           midwesternStartingSalaries.push(d["Starting Median Salary"]);
+          midwesternMidSalaries.push(d["Mid-Career Median Salary"]);
 
         } else if (d["Region"] == "California") {
           californiaStartingSalaries.push(d["Starting Median Salary"]);
+          californiaMidSalaries.push(d["Mid-Career Median Salary"]);
 
         } else if (d["Region"] == "Northeastern") {
           northeasternStartingSalaries.push(d["Starting Median Salary"]);
+          northeasternMidSalaries.push(d["Mid-Career Median Salary"]);
         }
       });
 
-      regionSalaries.push({region: "Southern", median: findMedian(southernStartingSalaries)});
-      regionSalaries.push({region: "Western", median: findMedian(westernStartingSalaries)});
-      regionSalaries.push({region: "Midwestern", median: findMedian(midwesternStartingSalaries)});
-      regionSalaries.push({region: "California", median: findMedian(californiaStartingSalaries)});
-      regionSalaries.push({region: "Northeastern", median: findMedian(northeasternStartingSalaries)});
+      regionStartingSalaries.push({region: "Southern", median: findMedian(southernStartingSalaries)});
+      regionStartingSalaries.push({region: "Western", median: findMedian(westernStartingSalaries)});
+      regionStartingSalaries.push({region: "Midwestern", median: findMedian(midwesternStartingSalaries)});
+      regionStartingSalaries.push({region: "California", median: findMedian(californiaStartingSalaries)});
+      regionStartingSalaries.push({region: "Northeastern", median: findMedian(northeasternStartingSalaries)});
 
-      // console.log(regionSalaries);
+      regionMidSalaries.push({region: "Southern", median: findMedian(southernMidSalaries)});
+      regionMidSalaries.push({region: "Western", median: findMedian(westernMidSalaries)});
+      regionMidSalaries.push({region: "Midwestern", median: findMedian(midwesternMidSalaries)});
+      regionMidSalaries.push({region: "California", median: findMedian(californiaMidSalaries)});
+      regionMidSalaries.push({region: "Northeastern", median: findMedian(northeasternMidSalaries)});
 
       let currentState = [];
       let currentStateName = "";
@@ -325,20 +342,27 @@
           .attr("text-anchor", "middle")
           .text("Median Starting Salary of College Graduates by Region Compared to Median Income by State");
 
-
-      minRegionMedian = d3.min(regionSalaries, function(d) { return Math.min(d["median"]); });
-      maxRegionMedian = d3.min(regionSalaries, function(d) { return Math.max(d["median"]); });
-
       let radiusScale = d3.scaleLinear()
-          .domain([40000, 50000])
-          .range([55, 115]);
+          .domain([43000, 92000])
+          .range([55, 100]);
 
       let regionCircles = svg.append("g").attr("class", "region circles")
         .attr("transform","translate("+margin.left+","+margin.top+")");
 
-      regionSalaries.forEach(function(region) {
+      console.log(regionStartingSalaries);
+      console.log(regionMidSalaries);
+
+      regionStartingSalaries.forEach(function(region) {
         // console.log(region.region + ": " + region.median + ", " + radiusScale(region.median));
         if(region.region == "California") {
+          regionCircles.append("circle")
+            .attr("cx", 120)
+            .attr("cy", 290)
+            .attr("r", radiusScale(regionMidSalaries[3].median))
+            .attr("fill", "none")
+            .attr("stroke", "orange")
+            .attr("stroke-width", "5px")
+            .attr("stroke-opacity", .45);
           regionCircles.append("circle")
             .attr("cx", 120)
             .attr("cy", 290)
@@ -358,9 +382,17 @@
             .attr("y", 300)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
-            .text("$" + region.median);
+            .text("$" + region.median + ", $" + regionMidSalaries[3].median);
 
         } if(region.region == "Southern") {
+          regionCircles.append("circle")
+            .attr("cx", 650)
+            .attr("cy", 400)
+            .attr("r", radiusScale(regionMidSalaries[0].median))
+            .attr("fill", "none")
+            .attr("stroke", "green")
+            .attr("stroke-width", "5px")
+            .attr("stroke-opacity", .45);
           regionCircles.append("circle")
             .attr("cx", 650)
             .attr("cy", 400)
@@ -380,9 +412,17 @@
               .attr("y", 410)
               .attr("text-anchor", "middle")
               .attr("dominant-baseline", "central")
-              .text("$" + region.median);
+              .text("$" + region.median + ", $" + regionMidSalaries[0].median);
 
         } if(region.region == "Northeastern") {
+          regionCircles.append("circle")
+            .attr("cx", 870)
+            .attr("cy", 150)
+            .attr("r", radiusScale(regionMidSalaries[4].median))
+            .attr("fill", "none")
+            .attr("stroke", "#D5E1A3")
+            .attr("stroke-width", "5px")
+            .attr("stroke-opacity", .45);
           regionCircles.append("circle")
             .attr("cx", 870)
             .attr("cy", 150)
@@ -402,14 +442,22 @@
             .attr("y", 160)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
-            .text("$" + region.median);
+            .text("$" + region.median + ", $" + regionMidSalaries[4].median);
 
         } if(region.region == "Midwestern") {
           regionCircles.append("circle")
             .attr("cx", 520)
             .attr("cy", 200)
+            .attr("r", radiusScale(regionMidSalaries[2].median))
+            .attr("fill", "none")
+            .attr("stroke", "#9370A0")
+            .attr("stroke-width", "5px")
+            .attr("stroke-opacity", .45);
+          regionCircles.append("circle")
+            .attr("cx", 520)
+            .attr("cy", 200)
             .attr("r", radiusScale(region.median))
-            .attr("fill", "#E07A5F")
+            .attr("fill", "#9370A0")
             .attr("fill-opacity", .45);
           regionCircles.append("text")
             .attr("class", "regionText")
@@ -424,14 +472,22 @@
             .attr("y", 210)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
-            .text("$" + region.median);
+            .text("$" + region.median + ", $" + regionMidSalaries[2].median);
 
         } if(region.region == "Western") {
           regionCircles.append("circle")
             .attr("cx", 300)
             .attr("cy", 220)
+            .attr("r", radiusScale(regionMidSalaries[1].median))
+            .attr("fill", "none")
+            .attr("stroke", "#E07A5F")
+            .attr("stroke-width", "5px")
+            .attr("stroke-opacity", .45);
+          regionCircles.append("circle")
+            .attr("cx", 300)
+            .attr("cy", 220)
             .attr("r", radiusScale(region.median))
-            .attr("fill", "#9370A0")
+            .attr("fill", "#E07A5F")
             .attr("fill-opacity", .45);
           regionCircles.append("text")
             .attr("class", "regionText")
@@ -446,7 +502,7 @@
             .attr("y", 230)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
-            .text("$" + region.median);
+            .text("$" + region.median + ", $" + regionMidSalaries[1].median);
 
         }
       });
@@ -516,8 +572,8 @@
     is determined by a linear scale, which assigns a radius based on the median starting salary of college
     graduates from that region.
 
-    </br>
-    </br>
+    <br/>
+    <br/>
 
     The purpose of this visualization is to explore whether graduating college in "wealthier" regions correlates
     with a higher starting salary. The combination of the chloropleth map and the circles help illustrate any
@@ -525,8 +581,8 @@
     state compared to other states) and the starting salary. The color of the states combined with the area and
     labels of the circles provides an effective visual comparison of any disparities that may exist.
 
-    </br>
-    </br>
+    <br/>
+    <br/>
 
     The visualization provides evidence of a small but positive correlation between the wealth of the region and
     the starting income of college graduates from that region.
