@@ -6,9 +6,6 @@
 </head>
 
 <body>
-  <svg class="stateMap" height="670" width="1000" style="display: block; margin: 0 auto;"></svg>
-  <svg class="mapLegend" height="150" width="1000" style="display: block; margin: 0 auto; margin-top: 20px;"></svg>
-
   <style>
     .regionText {
       font-weight: bold;
@@ -41,7 +38,8 @@
 
     .blurb {
       margin: 0 auto;
-      margin-bottom: 100px;
+      margin-top: 40px;
+      margin-bottom: 50px;
       display: block;
       width: 80%;
       font-size: 16px;
@@ -54,6 +52,25 @@
     }
 
   </style>
+
+  <p class="blurb">
+    <span class="bold">Visualization Overview</span>
+    <br/>
+    This chloropleth map visualizes median household income. 5 US regions (Northeastern, Southern, Midwestern,
+    Western, and California) are outlined by unique colors. Circles representing the median starting salary
+    and median mid-career salaries of college graduates who attended school in the region have been overlaid on
+    the map.
+
+    <br/>
+    <br/>
+
+    The purpose of this visualization is to explore whether graduating college in "wealthier" regions correlates
+    with a higher starting and mid-career salary.
+  </p>
+
+  <svg class="stateMap" height="670" width="1000" style="display: block; margin: 0 auto;"></svg>
+  <svg class="mapLegend" height="150" width="1000" style="display: block; margin: 0 auto; margin-top: 20px;"></svg>
+
   <script>
       const svg = d3.select(".stateMap");
       const height = svg.attr("height");
@@ -579,21 +596,6 @@
 
     visualizeData();
   </script>
-
-  <p class="blurb">
-    <span class="bold">Visualization Overview</span>
-    <br/>
-    This chloropleth map visualizes median household income. 5 US regions (Northeastern, Southern, Midwestern,
-    Western, and California) are outlined by unique colors. Circles representing the median starting salary
-    and median mid-career salaries of college graduates who attended school in the region have been overlaid on
-    the map.
-
-    <br/>
-    <br/>
-
-    The purpose of this visualization is to explore whether graduating college in "wealthier" regions correlates
-    with a higher starting and mid-career salary.
-  </p>
 
   <svg class="typePlot" height="1000" width="1000" style="margin: 0 auto; display: block"></svg>
 
