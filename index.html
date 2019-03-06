@@ -134,7 +134,7 @@
           })
           .attr("fill","none")
           .attr("stroke","orange")
-          .attr("stroke-width",2);
+          .attr("stroke-width",3);
       });
 
       //western region
@@ -333,7 +333,8 @@
         .range([margin.right, (width-margin.right-1)]);
 
         let xAxis = d3.axisBottom(xScale)
-        .ticks(5);
+        .ticks(5)
+        .tickFormat(d => "$" + d);
 
         svg.append("g")
         .attr("class", "axis")
