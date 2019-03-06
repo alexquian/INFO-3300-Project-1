@@ -598,7 +598,7 @@
     visualizeData();
   </script>
 
-  <svg class="typePlot" height="600" width="700" style="margin: 0 auto; display: block"></svg>
+  <svg class="typePlot" height="650" width="700" style="margin: 0 auto; display: block"></svg>
   <svg class="typeLegend" height="150" width="700" style="display: block; margin: 0 auto; margin-top: 20px;"></svg>
 
   <script>
@@ -710,11 +710,12 @@
       Together.push({type: 4, medianStart: findMedianType(engineeringSalaries), medianMid: findMedianType(engineeringSalariesMid)});
       Together.push({type: 5, medianStart: findMedianType(ivySalaries), medianMid: findMedianType(ivySalariesMid)});
 
-      let typePlot = svgType.append("g").attr("class", "typePlot")
-        .attr("width","1000")
-        .attr("height","500");
-      let widthType = typePlot.attr("width");
-      let heightType = typePlot.attr("height");
+    let typePlot = svgType.append("g").attr("class", "typePlot")
+      .attr("width","1000")
+      .attr("height","500")
+      .attr("transform","translate(0,50)");
+    let widthType = typePlot.attr("width");
+    let heightType = typePlot.attr("height");
 
     //scale & axis
     typeScale = d3.scaleLinear()
@@ -725,7 +726,7 @@
         .range([100,700]);
     let yaxisType = d3.axisLeft(typeScale)
         .ticks(10);
-    let yaxisType2 = svgType.append("g")
+    let yaxisType2 = typePlot.append("g")
         .attr("transform","translate(50,0)")
         .call(yaxisType);
 
@@ -733,13 +734,13 @@
     let xaxisType = d3.axisBottom(xScale)
         .ticks(5)
         .tickFormat(function(d,i) { return typeLabels[i]; })
-    let xaxisType2 = svgType.append("g")
+    let xaxisType2 = typePlot.append("g")
         .attr("transform","translate(0,550)")
         .call(xaxisType);
 
      // Start points
      Together.forEach(function(d,i){
-        svgType.append("line")
+        typePlot.append("line")
         .attr("x1", (100+(100*d['type'])-12.5))
         .attr("x2", (100+(100*d['type'])-12.5))
         .attr("y1", typeScale(d['medianStart']))
@@ -750,7 +751,7 @@
 
     // Mid points
     Together.forEach(function(d,i){
-        svgType.append("line")
+        typePlot.append("line")
         .attr("x1", (100+(100*d['type'])+12.5))
         .attr("x2", (100+(100*d['type'])+12.5))
         .attr("y1", typeScale(d['medianMid']))
@@ -760,12 +761,11 @@
     });
 
       //TITLE
-      typePlot.append("text").attr("id", "typeTitle")
-        .attr("x", 350)
-        .attr("y", (20))
-        .attr("text-anchor", "middle")
-        .attr("margin-bottom", "20px")
-        .text("Type of School vs Median Starting and Mid-Career Salary");
+    svgType.append("text").attr("id", "typeTitle")
+      .attr("x", 350)
+      .attr("y", (20))
+      .attr("text-anchor", "middle")
+      .text("Type of School vs Median Starting and Mid-Career Salary");
 
     let typeLegend = d3.select(".typeLegend")
       // LEGEND
@@ -774,7 +774,6 @@
       .text("School Type Legend")
       .style("text-anchor", "middle")
       .style("dominant-baseline", "central")
-      .style("text-decoration","underline")
       .style("font-weight","bold")
       .attr("x", 350)
       .attr("y", 30);
