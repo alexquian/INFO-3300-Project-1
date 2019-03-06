@@ -372,14 +372,14 @@
       let mapTitle = svg.append("g").attr("class", "title")
         .attr("transform","translate("+margin.left+","+margin.top+")");
         mapTitle.append("text").attr("id", "chartTitle")
-          .attr("x", (mapWidth/2))
-          .attr("y", (0))
-          .attr("text-anchor", "middle")
-          .text("Median Salaries of College Graduates by Region Compared to Median Income by State");
+        .attr("x", (mapWidth/2))
+        .attr("y", (0))
+        .attr("text-anchor", "middle")
+        .text("Median Salaries of College Graduates by Region Compared to Median Income by State");
 
       let radiusScale = d3.scaleLinear()
-          .domain([43000, 92000])
-          .range([55, 100]);
+        .domain([43000, 92000])
+        .range([55, 100]);
 
       let regionCircles = svg.append("g").attr("class", "region circles")
         .attr("transform","translate("+margin.left+","+margin.top+")");
@@ -435,19 +435,19 @@
             .attr("fill", "green")
             .attr("fill-opacity", .45);
           regionCircles.append("text")
-              .attr("class", "regionText")
-              .attr("x", 650)
-              .attr("y", 390)
-              .attr("text-anchor", "middle")
-              .attr("dominant-baseline", "central")
-              .text(region.region);
+            .attr("class", "regionText")
+            .attr("x", 650)
+            .attr("y", 390)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text(region.region);
           regionCircles.append("text")
-              .attr("class", "regionText")
-              .attr("x", 650)
-              .attr("y", 410)
-              .attr("text-anchor", "middle")
-              .attr("dominant-baseline", "central")
-              .text("$" + region.median + ", $" + regionMidSalaries[0].median);
+            .attr("class", "regionText")
+            .attr("x", 650)
+            .attr("y", 410)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
+            .text("$" + region.median + ", $" + regionMidSalaries[0].median);
 
         } if(region.region == "Northeastern") {
           regionCircles.append("circle")
@@ -599,6 +599,7 @@
   </script>
 
   <svg class="typePlot" height="600" width="700" style="margin: 0 auto; display: block"></svg>
+  <svg class="typeLegend" height="150" width="700" style="display: block; margin: 0 auto; margin-top: 20px;"></svg>
 
   <script>
       const svgType = d3.select(".typePlot");
@@ -759,47 +760,50 @@
     });
 
       //TITLE
-      const svgTitleType = d3.select(".titleType");
-      let TitleType = svgTitleType.append("g").attr("class", "title")
-        svgTitleType.append("text").attr("id", "typeTitle")
-          .attr("x", (widthType/2))
-          .attr("y", (20))
-          .attr("text-anchor", "middle")
-          .text("Type of School vs Median Starting and Mid-Career Salary");
+      typePlot.append("text").attr("id", "typeTitle")
+        .attr("x", 350)
+        .attr("y", (20))
+        .attr("text-anchor", "middle")
+        .attr("margin-bottom", "20px")
+        .text("Type of School vs Median Starting and Mid-Career Salary");
 
+    let typeLegend = d3.select(".typeLegend")
       // LEGEND
-      const typeLegend = d3.select(".typeLegend");
-      typeLegend.append("text")
-        .text("School Type Legend")
-        .style("text-anchor", "middle")
-        .style("text-decoration","underline")
-        .style("font-weight","bold")
-        .attr("x", widthType/2)
-        .attr("y", 30);
-
-      typeLegend.append("line")
-        .attr("x1",240)
-        .attr("x2",240)
-        .attr("y1",100)
-        .attr("y2",50)
-        .style("stroke","#203F61")
-        .style("stroke-width",25);
-      typeLegend.append("text")
-        .text(" = Median Starting Salary")
-        .attr("x",290)
-        .attr("y",75);
-
-      typeLegend.append("line")
-        .attr("x1",550)
-        .attr("x2",550)
-        .attr("y1",100)
-        .attr("y2",50)
-        .style("stroke","#F37458")
-        .style("stroke-width",25);
-      typeLegend.append("text")
-        .text(" = Median Mid-career Salary")
-        .attr("x",580)
-        .attr("y",75);
+    typeLegend.append("text")
+      .attr("class", "legendTitle")
+      .text("School Type Legend")
+      .style("text-anchor", "middle")
+      .style("dominant-baseline", "central")
+      .style("text-decoration","underline")
+      .style("font-weight","bold")
+      .attr("x", 350)
+      .attr("y", 30);
+    typeLegend.append("line")
+      .attr("x1",30)
+      .attr("x2",30)
+      .attr("y1",100)
+      .attr("y2",50)
+      .style("stroke","#203F61")
+      .style("stroke-width",25);
+    typeLegend.append("text")
+      .attr("class", "legendText")
+      .text("Median Starting Salary")
+      .attr("x",60)
+      .attr("y",75)
+      .attr("dominant-baseline", "central");
+    typeLegend.append("line")
+      .attr("x1",430)
+      .attr("x2",430)
+      .attr("y1",100)
+      .attr("y2",50)
+      .style("stroke","#F37458")
+      .style("stroke-width",25);
+    typeLegend.append("text")
+      .attr("class", "legendText")
+      .text("Median Mid-career Salary")
+      .attr("x",460)
+      .attr("y",75)
+      .attr("dominant-baseline", "central");
 
     }
 
