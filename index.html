@@ -598,7 +598,7 @@
     visualizeData();
   </script>
 
-  <svg class="typePlot" height="1000" width="1000" style="margin: 0 auto; display: block"></svg>
+  <svg class="typePlot" height="600" width="700" style="margin: 0 auto; display: block"></svg>
 
   <script>
       const svgType = d3.select(".typePlot");
@@ -711,7 +711,7 @@
 
       let typePlot = svgType.append("g").attr("class", "typePlot")
         .attr("width","1000")
-        .attr("height","1000");
+        .attr("height","500");
       let widthType = typePlot.attr("width");
       let heightType = typePlot.attr("height");
 
@@ -728,7 +728,7 @@
         .attr("transform","translate(50,0)")
         .call(yaxisType);
 
-    let typeLabels = ['','State','Liberal Arts','Party','Engineering','Ivy league',''];
+    let typeLabels = ['','State','Liberal Arts','Party','Engineering','Ivy League',''];
     let xaxisType = d3.axisBottom(xScale)
         .ticks(5)
         .tickFormat(function(d,i) { return typeLabels[i]; })
@@ -743,7 +743,7 @@
         .attr("x2", (100+(100*d['type'])-12.5))
         .attr("y1", typeScale(d['medianStart']))
         .attr("y2", 550)
-        .style("stroke","blue")
+        .style("stroke","#203F61")
         .style("stroke-width",25)
     });
 
@@ -754,17 +754,53 @@
         .attr("x2", (100+(100*d['type'])+12.5))
         .attr("y1", typeScale(d['medianMid']))
         .attr("y2", 550)
-        .style("stroke","red")
+        .style("stroke","#F37458")
         .style("stroke-width",25)
     });
 
       //TITLE
-      let mapTitleType = svgType.append("g").attr("class", "title")
-        mapTitleType.append("text").attr("id", "typeTitle")
+      const svgTitleType = d3.select(".titleType");
+      let TitleType = svgTitleType.append("g").attr("class", "title")
+        svgTitleType.append("text").attr("id", "typeTitle")
           .attr("x", (widthType/2))
           .attr("y", (20))
           .attr("text-anchor", "middle")
-          .text("Type of School vs Starting and Median Salary");
+          .text("Type of School vs Median Starting and Mid-Career Salary");
+
+      // LEGEND
+      const typeLegend = d3.select(".typeLegend");
+      typeLegend.append("text")
+        .text("School Type Legend")
+        .style("text-anchor", "middle")
+        .style("text-decoration","underline")
+        .style("font-weight","bold")
+        .attr("x", widthType/2)
+        .attr("y", 30);
+
+      typeLegend.append("line")
+        .attr("x1",240)
+        .attr("x2",240)
+        .attr("y1",100)
+        .attr("y2",50)
+        .style("stroke","#203F61")
+        .style("stroke-width",25);
+      typeLegend.append("text")
+        .text(" = Median Starting Salary")
+        .attr("x",290)
+        .attr("y",75);
+
+      typeLegend.append("line")
+        .attr("x1",550)
+        .attr("x2",550)
+        .attr("y1",100)
+        .attr("y2",50)
+        .style("stroke","#F37458")
+        .style("stroke-width",25);
+      typeLegend.append("text")
+        .text(" = Median Mid-career Salary")
+        .attr("x",580)
+        .attr("y",75);
+
     }
 
     showTypePlot();
